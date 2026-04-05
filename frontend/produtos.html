@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FASPER | Cadastro de produtos</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- Atividade 2 do cronograma: RF3 Cadastro de produtos -->
+  <header class="header">
+    <div class="container header-inner">
+      <div class="brand">
+        <div class="logo">F</div>
+        <h1>FASPER Marketplace</h1>
+      </div>
+
+      <nav class="nav">
+        <a href="index.html">Início</a>
+        <a href="cadastro.html">Cadastro</a>
+        <a href="vendedor.html">Vendedor</a>
+        <a class="active" href="produtos.html">Produtos</a>
+        <a href="lista-produtos.html">Lista de produtos</a>
+        <a href="resumo.html">Resumo</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container page">
+    <section class="box panel">
+      <span class="tag-entrega">Atividade 2 do cronograma</span>
+      <h2>Cadastro de produto</h2>
+      <p>
+        RF3: cadastro de produtos com nome, preço, categoria, avaliação inicial e no mínimo 2 fotos.
+      </p>
+
+      <form id="produtoForm" class="form-grid" enctype="multipart/form-data">
+        <div class="field">
+          <label for="produtoNome">Nome do produto</label>
+          <input id="produtoNome" required>
+        </div>
+
+        <div class="field">
+          <label for="produtoPreco">Preço do produto (R$)</label>
+          <input id="produtoPreco" type="number" min="0.01" step="0.01" required>
+        </div>
+
+        <div class="field">
+          <label for="produtoCategoria">Categoria</label>
+          <input id="produtoCategoria" placeholder="Ex.: Artesanato" required>
+        </div>
+
+        <div class="field">
+          <label for="produtoAvaliacao">Avaliação inicial (1 a 5)</label>
+          <select id="produtoAvaliacao">
+            <option value="5">5</option>
+            <option value="4">4</option>
+            <option value="3">3</option>
+            <option value="2">2</option>
+            <option value="1">1</option>
+          </select>
+        </div>
+
+        <div class="field full">
+          <label for="produtoDescricao">Descrição do produto</label>
+          <textarea id="produtoDescricao" placeholder="Descrição simples do produto"></textarea>
+        </div>
+
+        <div class="field full">
+          <label for="produtoFotos">Fotos do produto (mínimo 2)</label>
+          <input id="produtoFotos" type="file" accept="image/*" multiple>
+          <small class="helper-text">Você pode selecionar uma foto por vez. O sistema acumula os anexos até atingir no mínimo 2 fotos.</small>
+        </div>
+
+        <div class="field full">
+          <div id="previewFotos" class="preview-grid"></div>
+          <div id="listaArquivosSelecionados" class="selected-files"></div>
+        </div>
+
+        <div class="actions">
+          <button class="btn btn-primary" type="submit">Salvar produto</button>
+        </div>
+
+        <div id="msgProduto" class="msg"></div>
+      </form>
+    </section>
+  </main>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FASPER | Produtos cadastrados</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- Atividade 2 do cronograma: RF4 Listagem de produtos -->
+  <header class="header">
+    <div class="container header-inner">
+      <div class="brand">
+        <div class="logo">F</div>
+        <h1>FASPER Marketplace</h1>
+      </div>
+
+      <nav class="nav">
+        <a href="index.html">Início</a>
+        <a href="cadastro.html">Cadastro</a>
+        <a href="vendedor.html">Vendedor</a>
+        <a href="produtos.html">Produtos</a>
+        <a class="active" href="lista-produtos.html">Lista de produtos</a>
+        <a href="resumo.html">Resumo</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container page page-store-final">
+    <section class="box table-section table-section-final">
+      <div class="section-heading section-heading-final">
+        <div>
+          <span class="tag-entrega">Atividade 2 do cronograma</span>
+          <h2>Produtos cadastrados</h2>
+          <p>RF4: listagem em formato de tabela com dados do produto e visualização da imagem ao clicar.</p>
+        </div>
+        <a class="btn btn-primary" href="produtos.html">+ Novo produto</a>
+      </div>
+
+      <div class="filters-row-final">
+        <div class="field field-search-final">
+          <label for="filtroBusca">Pesquisar produto</label>
+          <input id="filtroBusca" placeholder="Pesquisar produto...">
+        </div>
+
+        <div class="field field-small-final">
+          <label for="filtroPrecoMax">Preço máximo</label>
+          <input id="filtroPrecoMax" type="number" min="0" step="0.01" placeholder="0,00">
+        </div>
+
+        <div class="field field-small-final">
+          <label for="filtroAvaliacao">Avaliação mínima</label>
+          <select id="filtroAvaliacao">
+            <option value="">Todas</option>
+            <option value="5">5</option>
+            <option value="4">4 ou mais</option>
+            <option value="3">3 ou mais</option>
+            <option value="2">2 ou mais</option>
+            <option value="1">1 ou mais</option>
+          </select>
+        </div>
+
+        <div class="filters-actions-final">
+          <button class="btn btn-primary" type="button" id="btnFiltrarProdutos">Aplicar filtros</button>
+          <button class="btn btn-secondary" type="button" id="btnLimparFiltros">Limpar</button>
+        </div>
+      </div>
+
+      <div id="listaVazia" class="empty-state" hidden>
+        Nenhum produto cadastrado ou encontrado com os filtros informados.
+      </div>
+
+      <div class="table-wrap table-wrap-final">
+        <table class="product-table product-table-final">
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Preço</th>
+              <th>Descrição</th>
+              <th>Avaliação</th>
+              <th>Fotos</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="tabelaProdutosBody"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <div id="modalImagens" class="modal-gallery" hidden>
+    <div class="modal-gallery-backdrop" data-close-modal="true"></div>
+    <div class="modal-gallery-card box">
+      <div class="modal-gallery-header">
+        <div>
+          <span class="tag-entrega">Visualização de imagens</span>
+          <h3 id="modalTituloProduto">Produto</h3>
+        </div>
+        <button class="btn btn-secondary" type="button" id="btnFecharModalImagens">Fechar</button>
+      </div>
+
+      <div id="modalImagemPrincipal" class="modal-image-main"></div>
+      <div id="modalMiniaturas" class="modal-thumbs"></div>
+    </div>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

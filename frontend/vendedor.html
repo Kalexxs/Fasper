@@ -1,40 +1,67 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>FASPER | Vendedor</title>
-    <link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FASPER | Vendedor</title>
+  <link rel="stylesheet" href="css/style.css">
 </head>
-
 <body>
-    <header class="header">
-        <div class="container header-inner">
-            <div class="brand">
-                <div class="logo">F</div>
-                <h1>FASPER Marketplace</h1>
-            </div>
-            <nav class="nav"><a class="" href="index.html">Início</a><a class="" href="cadastro.html">Cadastro</a><a
-                    class="active" href="vendedor.html">Vendedor</a><a class="" href="resumo.html">Resumo</a></nav>
-        </div>
-    </header>
-    <main class="container page">
-        <section class="box panel">
-            <h2>Perfil do vendedor</h2>
-            <p>Dados da loja.</p>
-            <form id="vendedorForm" class="form-grid">
-                <div class="field"><label>Nome da loja</label><input id="loja" required></div>
-                <div class="field"><label>Contato</label><input id="contato" required></div>
-                <div class="field full"><label>Imagem da loja (URL)</label><input id="imagem"></div>
-                <div class="field full"><label>Descrição</label><textarea id="descricao" required></textarea></div>
-                <div class="actions"><button class="btn btn-primary" type="submit">Salvar</button><a
-                        class="btn btn-secondary" href="cadastro.html">Voltar</a></div>
-                <div id="msg" class="msg"></div>
-            </form>
-        </section>
-    </main>
-    <script src="js/app.js"></script>
-</body>
+  <header class="header">
+    <div class="container header-inner">
+      <div class="brand">
+        <div class="logo">F</div>
+        <h1>FASPER Marketplace</h1>
+      </div>
 
+      <nav class="nav">
+        <a href="index.html">Início</a>
+        <a href="cadastro.html">Cadastro</a>
+        <a class="active" href="vendedor.html">Vendedor</a>
+        <!-- Atividade 2 do cronograma -->
+        <a href="produtos.html">Produtos</a>
+        <a href="lista-produtos.html">Lista de produtos</a>
+        <a href="resumo.html">Resumo</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container page">
+    <section class="box panel">
+      <h2>Perfil do vendedor</h2>
+      <p>Dados da loja.</p>
+
+      <form id="vendedorForm" class="form-grid">
+        <div class="field">
+          <label for="loja">Nome da loja</label>
+          <input id="loja" required>
+        </div>
+
+        <div class="field">
+          <label for="contato">Contato</label>
+          <input id="contato" required>
+        </div>
+
+        <div class="field full">
+          <label for="imagem">Imagem da loja (URL local opcional)</label>
+          <input id="imagem" placeholder="Ex.: imagens/minha-loja.png">
+        </div>
+
+        <div class="field full">
+          <label for="descricao">Descrição</label>
+          <textarea id="descricao" required></textarea>
+        </div>
+
+        <div class="actions">
+          <button class="btn btn-primary" type="submit">Salvar</button>
+          <a class="btn btn-secondary" href="cadastro.html">Voltar</a>
+        </div>
+
+        <div id="msg" class="msg"></div>
+      </form>
+    </section>
+  </main>
+
+  <script src="js/app.js"></script>
+</body>
 </html>
