@@ -30,16 +30,29 @@ const formatarMoeda = (valor) => Number(valor || 0).toLocaleString('pt-BR', {
   currency: 'BRL'
 });
 
-const gerarId = () => `PROD-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+const gerarId = (prefixo = 'ID') => `${prefixo}-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
 const normalizarTexto = (texto) => String(texto || '').trim().toLowerCase();
 const obterProdutos = () => ler('produtos', []);
 const salvarProdutos = (produtos) => gravar('produtos', produtos);
+const obterCarrinho = () => ler('carrinho', []);
+const salvarCarrinho = (carrinho) => gravar('carrinho', carrinho);
+const obterPedidos = () => ler('pedidos', []);
+const salvarPedidos = (pedidos) => gravar('pedidos', pedidos);
 
 function mostrarMensagem(idElemento, texto, erro = false) {
   const elemento = $(idElemento);
   if (!elemento) return;
   elemento.textContent = texto;
   elemento.classList.toggle('msg-error', erro);
+}
+
+// Atividade 3 do cronograma: atualiza o contador visual de itens no carrinho
+function atualizarIndicadorCarrinho() {
+  const carrinho = obterCarrinho();
+  const totalItens = carrinho.reduce((soma, item) => soma + Number(item.quantidade || 0), 0);
+  document.querySelectorAll('[data-cart-count]').forEach((elemento) => {
+    elemento.textContent = String(totalItens);
+  });
 }
 
 function validarFotos(files) {
@@ -128,7 +141,6 @@ function exportarVendedor() {
 // Atividade 2 do cronograma: exportação dos produtos para Excel
 function exportarProdutos() {
   const produtos = obterProdutos();
-
   const linhas = produtos.map((produto) => [
     produto.id,
     produto.nome,
@@ -142,17 +154,87 @@ function exportarProdutos() {
 
   baixarArquivo(
     'produtos.xls',
-    criarXls(
-      ['ID', 'Nome', 'Preço', 'Categoria', 'Avaliação', 'Descrição', 'Qtd. fotos', 'Criado em'],
-      linhas
-    )
+    criarXls(['ID', 'Nome', 'Preço', 'Categoria', 'Avaliação', 'Descrição', 'Qtd. fotos', 'Criado em'], linhas)
   );
+}
+
+// Atividade 3 do cronograma: exportação dos pedidos para Excel
+function exportarPedidos() {
+  const pedidos = obterPedidos();
+  const linhas = pedidos.map((pedido) => [
+    pedido.numero,
+    pedido.cliente,
+    pedido.contato,
+    pedido.endereco,
+    pedido.formaPagamento,
+    pedido.totalItens,
+    pedido.valorTotal,
+    pedido.criadoEm
+  ]);
+
+  baixarArquivo(
+    'pedidos.xls',
+    criarXls(['Pedido', 'Cliente', 'Contato', 'Endereço', 'Pagamento', 'Itens', 'Valor total', 'Data'], linhas)
+  );
+}
+
+// Atividade 3 do cronograma: RF5 adicionar produto ao carrinho
+function adicionarAoCarrinho(produto) {
+  const carrinho = obterCarrinho();
+  const existente = carrinho.find((item) => item.id === produto.id);
+
+  if (existente) {
+    existente.quantidade += 1;
+  } else {
+    carrinho.push({
+      id: produto.id,
+      nome: produto.nome,
+      preco: Number(produto.preco || 0),
+      foto: produto.fotos?.[0]?.dados || '',
+      quantidade: 1
+    });
+  }
+
+  salvarCarrinho(carrinho);
+  atualizarIndicadorCarrinho();
+}
+
+// Atividade 3 do cronograma: RF5 remover item do carrinho
+function removerDoCarrinho(idProduto) {
+  const carrinho = obterCarrinho().filter((item) => item.id !== idProduto);
+  salvarCarrinho(carrinho);
+  atualizarIndicadorCarrinho();
+}
+
+// Atividade 3 do cronograma: RF5 atualização de quantidade no carrinho
+function atualizarQuantidadeCarrinho(idProduto, quantidade) {
+  const carrinho = obterCarrinho();
+  const item = carrinho.find((registro) => registro.id === idProduto);
+  if (!item) return;
+
+  if (quantidade <= 0) {
+    removerDoCarrinho(idProduto);
+    return;
+  }
+
+  item.quantidade = quantidade;
+  salvarCarrinho(carrinho);
+  atualizarIndicadorCarrinho();
+}
+
+// Atividade 3 do cronograma: cálculo de total de itens e valor total
+function obterResumoCarrinho() {
+  const carrinho = obterCarrinho();
+  const totalItens = carrinho.reduce((soma, item) => soma + Number(item.quantidade || 0), 0);
+  const valorTotal = carrinho.reduce((soma, item) => soma + (Number(item.preco || 0) * Number(item.quantidade || 0)), 0);
+  return { carrinho, totalItens, valorTotal };
 }
 
 function preencherResumo() {
   const usuario = ler('usuario', {});
   const vendedor = ler('vendedor', {});
   const produtos = obterProdutos();
+  const pedidos = obterPedidos();
 
   ['nome', 'email', 'tipo'].forEach((campo) => {
     const elemento = $(`r_${campo}`);
@@ -166,11 +248,17 @@ function preencherResumo() {
 
   if ($('r_total_produtos')) $('r_total_produtos').textContent = String(produtos.length);
   if ($('r_ultimo_produto')) $('r_ultimo_produto').textContent = produtos.length ? produtos[produtos.length - 1].nome : '-';
+  if ($('r_total_pedidos')) $('r_total_pedidos').textContent = String(pedidos.length);
+  if ($('r_ultimo_pedido')) $('r_ultimo_pedido').textContent = pedidos.length ? pedidos[pedidos.length - 1].numero : '-';
 }
 
+// Atividade 2 do cronograma: cadastro de produtos com fotos e exportação
 async function configurarCadastroProduto() {
   const form = $('produtoForm');
   const inputFotos = $('produtoFotos');
+  const btnExportar = $('btnExportarProdutos');
+
+  btnExportar?.addEventListener('click', exportarProdutos);
 
   if (!form || !inputFotos) return;
 
@@ -234,7 +322,7 @@ async function configurarCadastroProduto() {
       const produtos = obterProdutos();
 
       produtos.push({
-        id: gerarId(),
+        id: gerarId('PROD'),
         nome,
         preco,
         categoria,
@@ -259,7 +347,7 @@ async function configurarCadastroProduto() {
   });
 }
 
-// Atividade 2 do cronograma: RF4 listagem em tabela com filtros compactos
+// Atividade 2 e 3 do cronograma: listagem de produtos com botão para adicionar ao carrinho
 function configurarListaProdutos() {
   const tabelaBody = $('tabelaProdutosBody');
   if (!tabelaBody) return;
@@ -268,10 +356,13 @@ function configurarListaProdutos() {
   const botaoLimpar = $('btnLimparFiltros');
   const modal = $('modalImagens');
   const modalTitulo = $('modalTituloProduto');
+  const btnExportar = $('btnExportarProdutosLista');
   if (modal) modal.hidden = true;
   const modalImagemPrincipal = $('modalImagemPrincipal');
   const modalMiniaturas = $('modalMiniaturas');
   const botaoFecharModal = $('btnFecharModalImagens');
+
+  btnExportar?.addEventListener('click', exportarProdutos);
 
   function obterFiltros() {
     return {
@@ -347,11 +438,21 @@ function configurarListaProdutos() {
             ${fotoPrincipal ? `<img src="${fotoPrincipal}" alt="Miniatura do produto ${produto.nome}" class="table-photo-thumb">` : '<span class="table-photo-empty">Sem foto</span>'}
           </button>
         </td>
-        <td><button class="btn btn-secondary btn-small" type="button">Ver imagem</button></td>
+        <td>
+          <div class="table-actions-wrap">
+            <button class="btn btn-secondary btn-small" type="button">Ver imagem</button>
+            <button class="btn btn-primary btn-small btn-add-cart" type="button">Adicionar</button>
+          </div>
+        </td>
       `;
 
       tr.querySelector('.photo-thumb-button').addEventListener('click', () => abrirModalImagens(produto));
-      tr.querySelector('.btn-small').addEventListener('click', () => abrirModalImagens(produto));
+      tr.querySelector('.btn-secondary').addEventListener('click', () => abrirModalImagens(produto));
+      tr.querySelector('.btn-add-cart').addEventListener('click', () => {
+        adicionarAoCarrinho(produto);
+        mostrarMensagem('msgListaProdutos', `Produto ${produto.nome} adicionado ao carrinho.`);
+        setTimeout(() => mostrarMensagem('msgListaProdutos', ''), 2500);
+      });
       tabelaBody.appendChild(tr);
     });
 
@@ -388,6 +489,151 @@ function configurarListaProdutos() {
   });
 
   renderizar();
+}
+
+// Atividade 3 do cronograma: RF5 tela do carrinho de compras
+function configurarCarrinho() {
+  const tabelaBody = $('tabelaCarrinhoBody');
+  if (!tabelaBody) return;
+
+  function renderizarCarrinho() {
+    const { carrinho, totalItens, valorTotal } = obterResumoCarrinho();
+    tabelaBody.innerHTML = '';
+
+    if (!carrinho.length) {
+      tabelaBody.innerHTML = '<tr><td colspan="5" class="table-empty">Seu carrinho está vazio.</td></tr>';
+    }
+
+    carrinho.forEach((item) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>
+          <div class="cart-product-cell">
+            ${item.foto ? `<img src="${item.foto}" alt="Foto do produto ${item.nome}" class="cart-thumb">` : '<div class="cart-thumb cart-thumb-empty">Sem foto</div>'}
+            <div>
+              <strong>${item.nome}</strong>
+              <div class="cart-id">${item.id}</div>
+            </div>
+          </div>
+        </td>
+        <td>${formatarMoeda(item.preco)}</td>
+        <td>
+          <input class="cart-qty-input" type="number" min="1" value="${item.quantidade}" data-id="${item.id}">
+        </td>
+        <td>${formatarMoeda(Number(item.preco || 0) * Number(item.quantidade || 0))}</td>
+        <td><button type="button" class="btn btn-secondary btn-small" data-remove="${item.id}">Remover</button></td>
+      `;
+      tabelaBody.appendChild(tr);
+    });
+
+    if ($('cartTotalItens')) $('cartTotalItens').textContent = String(totalItens);
+    if ($('cartValorTotal')) $('cartValorTotal').textContent = formatarMoeda(valorTotal);
+    if ($('cartResumoItens')) $('cartResumoItens').textContent = String(totalItens);
+    if ($('cartResumoTotal')) $('cartResumoTotal').textContent = formatarMoeda(valorTotal);
+    if ($('btnIrPedido')) $('btnIrPedido').classList.toggle('btn-disabled', !carrinho.length);
+
+    tabelaBody.querySelectorAll('[data-remove]').forEach((botao) => {
+      botao.addEventListener('click', () => {
+        removerDoCarrinho(botao.dataset.remove);
+        renderizarCarrinho();
+      });
+    });
+
+    tabelaBody.querySelectorAll('.cart-qty-input').forEach((input) => {
+      input.addEventListener('change', () => {
+        const quantidade = Math.max(1, Number(input.value || 1));
+        atualizarQuantidadeCarrinho(input.dataset.id, quantidade);
+        renderizarCarrinho();
+      });
+    });
+  }
+
+  $('btnLimparCarrinho')?.addEventListener('click', () => {
+    salvarCarrinho([]);
+    atualizarIndicadorCarrinho();
+    renderizarCarrinho();
+  });
+
+  $('btnIrPedido')?.addEventListener('click', () => {
+    const { carrinho } = obterResumoCarrinho();
+    if (!carrinho.length) {
+      mostrarMensagem('msgCarrinho', 'Adicione pelo menos um produto ao carrinho.', true);
+      return;
+    }
+    location.href = 'pedido.html';
+  });
+
+  renderizarCarrinho();
+}
+
+// Atividade 3 do cronograma: RF6 tela de finalização do pedido
+function configurarPedido() {
+  const form = $('pedidoForm');
+  if (!form) return;
+
+  const btnExportar = $('btnExportarPedidos');
+  btnExportar?.addEventListener('click', exportarPedidos);
+
+  const { carrinho, totalItens, valorTotal } = obterResumoCarrinho();
+  const resumoLista = $('pedidoResumoLista');
+  if (resumoLista) {
+    resumoLista.innerHTML = '';
+    carrinho.forEach((item) => {
+      const li = document.createElement('li');
+      li.innerHTML = `<span>${item.nome} x ${item.quantidade}</span><strong>${formatarMoeda(Number(item.preco || 0) * Number(item.quantidade || 0))}</strong>`;
+      resumoLista.appendChild(li);
+    });
+  }
+
+  if ($('pedidoResumoItens')) $('pedidoResumoItens').textContent = String(totalItens);
+  if ($('pedidoResumoTotal')) $('pedidoResumoTotal').textContent = formatarMoeda(valorTotal);
+
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    const { carrinho: carrinhoAtual, totalItens: totalAtual, valorTotal: valorAtual } = obterResumoCarrinho();
+    if (!carrinhoAtual.length) {
+      mostrarMensagem('msgPedido', 'O carrinho está vazio. Adicione produtos antes de finalizar o pedido.', true);
+      return;
+    }
+
+    const cliente = $('pedidoCliente').value.trim();
+    const contato = $('pedidoContato').value.trim();
+    const endereco = $('pedidoEndereco').value.trim();
+    const formaPagamento = $('pedidoPagamento').value;
+    const observacao = $('pedidoObservacao').value.trim();
+
+    if (!cliente || !contato || !endereco) {
+      mostrarMensagem('msgPedido', 'Preencha nome, contato e endereço para finalizar o pedido.', true);
+      return;
+    }
+
+    const pedidos = obterPedidos();
+    const numero = `PED-${new Date().getFullYear()}-${String(pedidos.length + 1).padStart(3, '0')}`;
+
+    pedidos.push({
+      id: gerarId('PED'),
+      numero,
+      cliente,
+      contato,
+      endereco,
+      formaPagamento,
+      observacao,
+      itens: carrinhoAtual,
+      totalItens: totalAtual,
+      valorTotal: valorAtual,
+      criadoEm: new Date().toLocaleString('pt-BR')
+    });
+
+    salvarPedidos(pedidos);
+    salvarCarrinho([]);
+    atualizarIndicadorCarrinho();
+    form.reset();
+    mostrarMensagem('msgPedido', `Pedido ${numero} finalizado com sucesso.`);
+    setTimeout(() => {
+      location.href = 'resumo.html';
+    }, 1500);
+  });
 }
 
 function configurarCadastroUsuario() {
@@ -431,12 +677,17 @@ function configurarVendedor() {
   });
 }
 
+// Inicialização geral das telas das entregas 1, 2 e 3 do cronograma
 document.addEventListener('DOMContentLoaded', () => {
-  const pagina = location.pathname.split('/').pop();
+  const pagina = location.pathname.split('/').pop() || 'index.html';
+
+  atualizarIndicadorCarrinho();
 
   if (pagina === 'cadastro.html') configurarCadastroUsuario();
   if (pagina === 'vendedor.html') configurarVendedor();
   if (pagina === 'resumo.html') preencherResumo();
   if (pagina === 'produtos.html') configurarCadastroProduto();
   if (pagina === 'lista-produtos.html') configurarListaProdutos();
+  if (pagina === 'carrinho.html') configurarCarrinho();
+  if (pagina === 'pedido.html') configurarPedido();
 });

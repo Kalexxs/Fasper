@@ -19,8 +19,12 @@
         <a href="index.html">Início</a>
         <a href="cadastro.html">Cadastro</a>
         <a href="vendedor.html">Vendedor</a>
+        <!-- Atividade 2 do cronograma: RF3 Cadastro de produtos -->
         <a class="active" href="produtos.html">Produtos</a>
         <a href="lista-produtos.html">Lista de produtos</a>
+        <!-- Atividade 3 do cronograma -->
+        <a href="carrinho.html">Carrinho <span class="cart-badge" data-cart-count>0</span></a>
+        <a href="pedido.html">Pedido</a>
         <a href="resumo.html">Resumo</a>
       </nav>
     </div>
@@ -79,6 +83,7 @@
 
         <div class="actions">
           <button class="btn btn-primary" type="submit">Salvar produto</button>
+          <button class="btn btn-secondary" type="button" id="btnExportarProdutos">Gerar Excel</button>
         </div>
 
         <div id="msgProduto" class="msg"></div>

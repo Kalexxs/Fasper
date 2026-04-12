@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FASPER | Carrinho</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- Atividade 3 do cronograma: RF5 Carrinho de compras -->
+  <header class="header">
+    <div class="container header-inner">
+      <div class="brand">
+        <div class="logo">F</div>
+        <h1>FASPER Marketplace</h1>
+      </div>
+
+      <nav class="nav">
+        <a href="index.html">Início</a>
+        <a href="cadastro.html">Cadastro</a>
+        <a href="vendedor.html">Vendedor</a>
+        <a href="produtos.html">Produtos</a>
+        <a href="lista-produtos.html">Lista de produtos</a>
+        <!-- Atividade 3 do cronograma: RF5 Carrinho de compras -->
+        <a class="active" href="carrinho.html">Carrinho <span class="cart-badge" data-cart-count>0</span></a>
+        <a href="pedido.html">Pedido</a>
+        <a href="resumo.html">Resumo</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container page page-store-final cart-page-grid">
+    <section class="box table-section table-section-final">
+      <div class="section-heading section-heading-final">
+        <div>
+          <span class="tag-entrega">Atividade 3 do cronograma</span>
+          <h2>Carrinho de compras</h2>
+          <p>RF5: visualização dos produtos selecionados, alteração de quantidade e remoção de itens.</p>
+        </div>
+      </div>
+
+      <div id="msgCarrinho" class="msg"></div>
+
+      <div class="table-wrap table-wrap-final">
+        <table class="product-table product-table-final">
+          <thead>
+            <tr>
+              <th>Produto</th>
+              <th>Preço unitário</th>
+              <th>Quantidade</th>
+              <th>Subtotal</th>
+              <th>Ação</th>
+            </tr>
+          </thead>
+          <tbody id="tabelaCarrinhoBody"></tbody>
+        </table>
+      </div>
+
+      <div class="cart-totals-inline">
+        <div class="cart-total-card"><strong>Total de itens</strong><span id="cartTotalItens">0</span></div>
+        <div class="cart-total-card"><strong>Valor total</strong><span id="cartValorTotal">R$ 0,00</span></div>
+      </div>
+    </section>
+
+    <aside class="box cart-summary-panel">
+      <span class="tag-entrega">Resumo do carrinho</span>
+      <h3>Próximo passo</h3>
+      <p>Confira os produtos e siga para a finalização do pedido.</p>
+
+      <div class="cart-summary-lines">
+        <div><span>Itens</span><strong id="cartResumoItens">0</strong></div>
+        <div><span>Total</span><strong id="cartResumoTotal">R$ 0,00</strong></div>
+      </div>
+
+      <div class="actions actions-column">
+        <button class="btn btn-primary" type="button" id="btnIrPedido">Ir para pedido</button>
+        <button class="btn btn-secondary" type="button" id="btnLimparCarrinho">Limpar carrinho</button>
+      </div>
+    </aside>
+  </main>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

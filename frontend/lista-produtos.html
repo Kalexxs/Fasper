@@ -19,8 +19,12 @@
         <a href="index.html">Início</a>
         <a href="cadastro.html">Cadastro</a>
         <a href="vendedor.html">Vendedor</a>
+        <!-- Atividade 2 do cronograma: RF4 Listagem de produtos -->
         <a href="produtos.html">Produtos</a>
         <a class="active" href="lista-produtos.html">Lista de produtos</a>
+        <!-- Atividade 3 do cronograma: RF5 Adição ao carrinho na listagem -->
+        <a href="carrinho.html">Carrinho <span class="cart-badge" data-cart-count>0</span></a>
+        <a href="pedido.html">Pedido</a>
         <a href="resumo.html">Resumo</a>
       </nav>
     </div>
@@ -30,11 +34,14 @@
     <section class="box table-section table-section-final">
       <div class="section-heading section-heading-final">
         <div>
-          <span class="tag-entrega">Atividade 2 do cronograma</span>
+          <span class="tag-entrega">Atividade 2 e 3 do cronograma</span>
           <h2>Produtos cadastrados</h2>
-          <p>RF4: listagem em formato de tabela com dados do produto e visualização da imagem ao clicar.</p>
+          <p>RF4: listagem dos produtos e RF5: adição de itens ao carrinho de compras.</p>
         </div>
-        <a class="btn btn-primary" href="produtos.html">+ Novo produto</a>
+        <div class="section-actions-inline">
+          <a class="btn btn-primary" href="produtos.html">+ Novo produto</a>
+          <button class="btn btn-secondary" type="button" id="btnExportarProdutosLista">Gerar Excel</button>
+        </div>
       </div>
 
       <div class="filters-row-final">
@@ -65,6 +72,8 @@
           <button class="btn btn-secondary" type="button" id="btnLimparFiltros">Limpar</button>
         </div>
       </div>
+
+      <div id="msgListaProdutos" class="msg"></div>
 
       <div id="listaVazia" class="empty-state" hidden>
         Nenhum produto cadastrado ou encontrado com os filtros informados.
