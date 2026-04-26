@@ -1,4 +1,4 @@
-# FASPER Unidade 1, 2 e 3
+# FASPER Unidade 1, 2, 3 e 4
 
 Abra `frontend/index.html` no navegador.
 
@@ -9,6 +9,9 @@ Abra `frontend/index.html` no navegador.
 - RF4 Listagem de produtos
 - RF5 Carrinho de compras
 - RF6 Realizar pedido
+- RF7 Mensagens
+- RF8 Avaliação de produto
+- RF9 Histórico de compras
 
 ## Persistência usada nesta etapa
 Os dados continuam em `localStorage` e os botões de salvar/exportar geram arquivos Excel (`.xls`).
@@ -32,4 +35,17 @@ Também foram adicionadas as funcionalidades:
 - finalizar pedido
 - exportar pedidos em Excel
 
-As partes novas da Atividade 3 também estão comentadas no mesmo padrão do restante do projeto.
+## Atividade 4 do cronograma
+Foram adicionadas as telas:
+- `frontend/historico.html`
+- `frontend/avaliacoes.html`
+- `frontend/mensagens.html`
+
+Também foram adicionadas as funcionalidades:
+- consultar histórico de compras
+- registrar avaliação de produto
+- atualizar a média de avaliação do produto
+- enviar mensagens entre comprador e vendedor
+- exportar histórico, avaliações e mensagens em Excel
+
+As partes novas da Atividade 4 estão comentadas no mesmo padrão do restante do projeto.

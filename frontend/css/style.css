@@ -988,3 +988,138 @@ textarea {
     grid-template-columns: 1fr;
   }
 }
+
+/* Atividade 4 do cronograma: RF7 Mensagens, RF8 Avaliação de produto e RF9 Histórico de compras */
+.activity4-grid,
+.order-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.85fr);
+  gap: 22px;
+  align-items: start;
+}
+
+.activity4-side-panel,
+.order-summary-panel {
+  padding: 24px;
+}
+
+.activity4-side-panel h3,
+.order-summary-panel h3 {
+  margin: 0 0 14px;
+  font-size: 1.35rem;
+}
+
+.activity4-list,
+.message-list {
+  display: grid;
+  gap: 12px;
+}
+
+.activity4-item,
+.message-item {
+  border: 1px solid #e3e9f2;
+  border-radius: 16px;
+  background: #fafcff;
+  padding: 14px;
+}
+
+.activity4-item strong,
+.message-item strong {
+  display: block;
+  margin-bottom: 6px;
+  color: #1b2b42;
+}
+
+.activity4-item span {
+  display: block;
+  color: #f2a900;
+  font-size: 1.2rem;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+
+.activity4-item p,
+.message-item p {
+  margin: 0 0 8px;
+  color: #46607e;
+  line-height: 1.5;
+}
+
+.activity4-item small,
+.message-item small {
+  color: #73839a;
+  font-weight: 700;
+}
+
+.message-item {
+  max-width: 92%;
+}
+
+.message-buyer {
+  justify-self: start;
+}
+
+.message-seller {
+  justify-self: end;
+  background: #edf3ff;
+}
+
+.section-actions-inline {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.order-summary-list {
+  list-style: none;
+  padding: 0;
+  margin: 14px 0;
+  display: grid;
+  gap: 10px;
+}
+
+.order-summary-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid #e3e9f2;
+  border-radius: 14px;
+  background: #fafcff;
+}
+
+.home-grid-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 12px;
+  margin-top: 22px;
+}
+
+.home-card-mini {
+  border: 1px solid #e3e9f2;
+  border-radius: 16px;
+  background: #fafcff;
+  padding: 16px;
+  display: grid;
+  gap: 6px;
+}
+
+.home-card-mini strong {
+  color: #2f6df6;
+}
+
+.home-card-mini span {
+  color: #73839a;
+  line-height: 1.4;
+}
+
+.home-card-highlight {
+  background: #edf3ff;
+}
+
+@media (max-width: 980px) {
+  .activity4-grid,
+  .order-grid {
+    grid-template-columns: 1fr;
+  }
+}

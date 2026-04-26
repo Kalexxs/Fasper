@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FASPER | Avaliações</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- Atividade 4 do cronograma -->
+  <header class="header">
+    <div class="container header-inner">
+      <div class="brand">
+        <div class="logo">F</div>
+        <h1>FASPER Marketplace</h1>
+      </div>
+
+      <nav class="nav">
+        <a href="index.html">Início</a>
+        <a href="cadastro.html">Cadastro</a>
+        <a href="vendedor.html">Vendedor</a>
+        <!-- Atividade 2 do cronograma -->
+        <a href="produtos.html">Produtos</a>
+        <!-- Atividade 2 do cronograma -->
+        <a href="lista-produtos.html">Lista de produtos</a>
+        <!-- Atividade 3 do cronograma -->
+        <a href="carrinho.html">Carrinho <span class="cart-badge" data-cart-count>0</span></a>
+        <!-- Atividade 3 do cronograma -->
+        <a href="pedido.html">Pedido</a>
+        <!-- Atividade 4 do cronograma -->
+        <a href="historico.html">Histórico</a>
+        <!-- Atividade 4 do cronograma -->
+        <a class="active" href="avaliacoes.html">Avaliações</a>
+        <!-- Atividade 4 do cronograma -->
+        <a href="mensagens.html">Mensagens</a>
+        <a href="resumo.html">Resumo</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container page activity4-grid">
+    <section class="box panel">
+      <span class="tag-entrega">Atividade 4 do cronograma</span><h2>Avaliação de produto</h2><p>RF8: registro da nota e comentário do cliente após a compra.</p>
+      <form id="avaliacaoForm" class="form-grid">
+        <div class="field full"><label for="avaliacaoProduto">Produto comprado</label><select id="avaliacaoProduto" required></select></div>
+        <div class="field"><label for="avaliacaoNota">Nota</label><select id="avaliacaoNota"><option value="5">5 - Excelente</option><option value="4">4 - Muito bom</option><option value="3">3 - Bom</option><option value="2">2 - Regular</option><option value="1">1 - Ruim</option></select></div>
+        <div class="field"><label for="avaliacaoCliente">Cliente</label><input id="avaliacaoCliente" placeholder="Nome do cliente" required></div>
+        <div class="field full"><label for="avaliacaoComentario">Comentário</label><textarea id="avaliacaoComentario" placeholder="Descreva sua experiência com o produto" required></textarea></div>
+        <div class="actions"><button class="btn btn-primary" type="submit">Salvar avaliação</button><button class="btn btn-secondary" type="button" id="btnExportarAvaliacoes">Gerar Excel</button></div><div id="msgAvaliacao" class="msg"></div>
+      </form>
+    </section>
+    <aside class="box activity4-side-panel"><h3>Avaliações registradas</h3><div id="listaAvaliacoes" class="activity4-list"></div></aside>
+  </main>
+  <script src="js/app.js"></script>
+</body>
+</html>

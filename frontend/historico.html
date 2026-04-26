@@ -3,10 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FASPER | Vendedor</title>
+  <title>FASPER | Histórico de compras</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+  <!-- Atividade 4 do cronograma -->
   <header class="header">
     <div class="container header-inner">
       <div class="brand">
@@ -17,7 +18,7 @@
       <nav class="nav">
         <a href="index.html">Início</a>
         <a href="cadastro.html">Cadastro</a>
-        <a class="active" href="vendedor.html">Vendedor</a>
+        <a href="vendedor.html">Vendedor</a>
         <!-- Atividade 2 do cronograma -->
         <a href="produtos.html">Produtos</a>
         <!-- Atividade 2 do cronograma -->
@@ -27,7 +28,7 @@
         <!-- Atividade 3 do cronograma -->
         <a href="pedido.html">Pedido</a>
         <!-- Atividade 4 do cronograma -->
-        <a href="historico.html">Histórico</a>
+        <a class="active" href="historico.html">Histórico</a>
         <!-- Atividade 4 do cronograma -->
         <a href="avaliacoes.html">Avaliações</a>
         <!-- Atividade 4 do cronograma -->
@@ -37,42 +38,22 @@
     </div>
   </header>
 
-  <main class="container page">
-    <section class="box panel">
-      <h2>Perfil do vendedor</h2>
-      <p>Dados da loja.</p>
-
-      <form id="vendedorForm" class="form-grid">
-        <div class="field">
-          <label for="loja">Nome da loja</label>
-          <input id="loja" required>
+  <main class="container page page-store-final">
+    <section class="box table-section table-section-final">
+      <div class="section-heading section-heading-final">
+        <div>
+          <span class="tag-entrega">Atividade 4 do cronograma</span>
+          <h2>Histórico de compras</h2>
+          <p>RF9: consulta dos pedidos finalizados, itens comprados, valores e data da compra.</p>
         </div>
-
-        <div class="field">
-          <label for="contato">Contato</label>
-          <input id="contato" required>
+        <div class="section-actions-inline">
+          <button class="btn btn-secondary" type="button" id="btnExportarHistorico">Gerar Excel</button>
         </div>
-
-        <div class="field full">
-          <label for="imagem">Imagem da loja (URL local opcional)</label>
-          <input id="imagem" placeholder="Ex.: imagens/minha-loja.png">
-        </div>
-
-        <div class="field full">
-          <label for="descricao">Descrição</label>
-          <textarea id="descricao" required></textarea>
-        </div>
-
-        <div class="actions">
-          <button class="btn btn-primary" type="submit">Salvar</button>
-          <a class="btn btn-secondary" href="cadastro.html">Voltar</a>
-        </div>
-
-        <div id="msg" class="msg"></div>
-      </form>
+      </div>
+      <div id="msgHistorico" class="msg"></div>
+      <div class="table-wrap table-wrap-final"><table class="product-table product-table-final"><thead><tr><th>Pedido</th><th>Cliente</th><th>Produtos</th><th>Itens</th><th>Total</th><th>Data</th><th>Ação</th></tr></thead><tbody id="tabelaHistoricoBody"></tbody></table></div>
     </section>
   </main>
-
   <script src="js/app.js"></script>
 </body>
 </html>

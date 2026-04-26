@@ -38,6 +38,10 @@ const obterCarrinho = () => ler('carrinho', []);
 const salvarCarrinho = (carrinho) => gravar('carrinho', carrinho);
 const obterPedidos = () => ler('pedidos', []);
 const salvarPedidos = (pedidos) => gravar('pedidos', pedidos);
+const obterAvaliacoes = () => ler('avaliacoes', []);
+const salvarAvaliacoes = (avaliacoes) => gravar('avaliacoes', avaliacoes);
+const obterMensagens = () => ler('mensagens', []);
+const salvarMensagens = (mensagens) => gravar('mensagens', mensagens);
 
 function mostrarMensagem(idElemento, texto, erro = false) {
   const elemento = $(idElemento);
@@ -250,6 +254,12 @@ function preencherResumo() {
   if ($('r_ultimo_produto')) $('r_ultimo_produto').textContent = produtos.length ? produtos[produtos.length - 1].nome : '-';
   if ($('r_total_pedidos')) $('r_total_pedidos').textContent = String(pedidos.length);
   if ($('r_ultimo_pedido')) $('r_ultimo_pedido').textContent = pedidos.length ? pedidos[pedidos.length - 1].numero : '-';
+
+  const avaliacoes = obterAvaliacoes();
+  const mensagens = obterMensagens();
+  if ($('r_total_mensagens')) $('r_total_mensagens').textContent = String(mensagens.length);
+  if ($('r_total_avaliacoes')) $('r_total_avaliacoes').textContent = String(avaliacoes.length);
+  if ($('r_historico_compras')) $('r_historico_compras').textContent = `${pedidos.length} pedidos registrados`;
 }
 
 // Atividade 2 do cronograma: cadastro de produtos com fotos e exportação
@@ -620,6 +630,7 @@ function configurarPedido() {
       formaPagamento,
       observacao,
       itens: carrinhoAtual,
+      status: 'Finalizado',
       totalItens: totalAtual,
       valorTotal: valorAtual,
       criadoEm: new Date().toLocaleString('pt-BR')
@@ -634,6 +645,268 @@ function configurarPedido() {
       location.href = 'resumo.html';
     }, 1500);
   });
+}
+
+// Atividade 4 do cronograma: exportação do histórico de compras para Excel
+function exportarHistoricoCompras() {
+  const pedidos = obterPedidos();
+  const linhas = pedidos.map((pedido) => [
+    pedido.numero,
+    pedido.cliente,
+    (pedido.itens || []).map((item) => `${item.nome} x ${item.quantidade}`).join(' | '),
+    pedido.totalItens,
+    pedido.valorTotal,
+    pedido.status || 'Finalizado',
+    pedido.criadoEm
+  ]);
+
+  baixarArquivo(
+    'historico-compras.xls',
+    criarXls(['Pedido', 'Cliente', 'Produtos', 'Itens', 'Valor total', 'Status', 'Data'], linhas)
+  );
+}
+
+// Atividade 4 do cronograma: exportação das avaliações para Excel
+function exportarAvaliacoes() {
+  const avaliacoes = obterAvaliacoes();
+  const linhas = avaliacoes.map((avaliacao) => [
+    avaliacao.produtoNome,
+    avaliacao.cliente,
+    avaliacao.nota,
+    avaliacao.comentario,
+    avaliacao.criadoEm
+  ]);
+
+  baixarArquivo(
+    'avaliacoes.xls',
+    criarXls(['Produto', 'Cliente', 'Nota', 'Comentário', 'Data'], linhas)
+  );
+}
+
+// Atividade 4 do cronograma: exportação das mensagens para Excel
+function exportarMensagens() {
+  const mensagens = obterMensagens();
+  const linhas = mensagens.map((mensagem) => [
+    mensagem.pedidoNumero,
+    mensagem.remetente,
+    mensagem.texto,
+    mensagem.criadoEm
+  ]);
+
+  baixarArquivo(
+    'mensagens.xls',
+    criarXls(['Pedido', 'Remetente', 'Mensagem', 'Data'], linhas)
+  );
+}
+
+// Atividade 4 do cronograma: RF9 Histórico de compras
+function configurarHistoricoCompras() {
+  const tabelaBody = $('tabelaHistoricoBody');
+  if (!tabelaBody) return;
+
+  $('btnExportarHistorico')?.addEventListener('click', exportarHistoricoCompras);
+
+  const pedidos = obterPedidos();
+  tabelaBody.innerHTML = '';
+
+  if (!pedidos.length) {
+    tabelaBody.innerHTML = '<tr><td colspan="7" class="table-empty">Nenhum pedido finalizado até o momento.</td></tr>';
+    return;
+  }
+
+  pedidos.slice().reverse().forEach((pedido) => {
+    const produtos = (pedido.itens || []).map((item) => `${item.nome} x ${item.quantidade}`).join('<br>');
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><strong>${pedido.numero}</strong><div class="cart-id">${pedido.status || 'Finalizado'}</div></td>
+      <td>${pedido.cliente || '-'}</td>
+      <td>${produtos || '-'}</td>
+      <td>${pedido.totalItens || 0}</td>
+      <td>${formatarMoeda(pedido.valorTotal || 0)}</td>
+      <td>${pedido.criadoEm || '-'}</td>
+      <td><a class="btn btn-primary btn-small" href="avaliacoes.html">Avaliar produto</a></td>
+    `;
+    tabelaBody.appendChild(tr);
+  });
+}
+
+// Atividade 4 do cronograma: RF8 Avaliação de produto
+function configurarAvaliacoes() {
+  const form = $('avaliacaoForm');
+  if (!form) return;
+
+  const selectProduto = $('avaliacaoProduto');
+  const listaAvaliacoes = $('listaAvaliacoes');
+  const produtos = obterProdutos();
+  const pedidos = obterPedidos();
+  const produtosCompradosIds = new Set();
+
+  pedidos.forEach((pedido) => {
+    (pedido.itens || []).forEach((item) => produtosCompradosIds.add(item.id));
+  });
+
+  const produtosComprados = produtos.filter((produto) => produtosCompradosIds.has(produto.id));
+  const opcoes = produtosComprados.length ? produtosComprados : produtos;
+
+  selectProduto.innerHTML = '';
+  opcoes.forEach((produto) => {
+    const option = document.createElement('option');
+    option.value = produto.id;
+    option.textContent = produto.nome;
+    selectProduto.appendChild(option);
+  });
+
+  if (!opcoes.length) {
+    selectProduto.innerHTML = '<option value="">Nenhum produto cadastrado</option>';
+  }
+
+  $('btnExportarAvaliacoes')?.addEventListener('click', exportarAvaliacoes);
+
+  function atualizarMediaProduto(produtoId) {
+    const avaliacoesProduto = obterAvaliacoes().filter((avaliacao) => avaliacao.produtoId === produtoId);
+    if (!avaliacoesProduto.length) return;
+
+    const media = avaliacoesProduto.reduce((soma, avaliacao) => soma + Number(avaliacao.nota || 0), 0) / avaliacoesProduto.length;
+    const produtosAtualizados = obterProdutos().map((produto) => (
+      produto.id === produtoId ? { ...produto, avaliacao: Number(media.toFixed(1)) } : produto
+    ));
+    salvarProdutos(produtosAtualizados);
+  }
+
+  function renderizarAvaliacoes() {
+    const avaliacoes = obterAvaliacoes().slice().reverse();
+    listaAvaliacoes.innerHTML = '';
+
+    if (!avaliacoes.length) {
+      listaAvaliacoes.innerHTML = '<div class="empty-state">Nenhuma avaliação registrada.</div>';
+      return;
+    }
+
+    avaliacoes.forEach((avaliacao) => {
+      const card = document.createElement('div');
+      card.className = 'activity4-item';
+      card.innerHTML = `
+        <strong>${avaliacao.produtoNome}</strong>
+        <span>${'★'.repeat(Number(avaliacao.nota))}${'☆'.repeat(5 - Number(avaliacao.nota))}</span>
+        <p>${avaliacao.comentario}</p>
+        <small>${avaliacao.cliente} • ${avaliacao.criadoEm}</small>
+      `;
+      listaAvaliacoes.appendChild(card);
+    });
+  }
+
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    const produtoId = selectProduto.value;
+    const produto = obterProdutos().find((item) => item.id === produtoId);
+    const cliente = $('avaliacaoCliente').value.trim();
+    const nota = Number($('avaliacaoNota').value);
+    const comentario = $('avaliacaoComentario').value.trim();
+
+    if (!produto || !cliente || !comentario) {
+      mostrarMensagem('msgAvaliacao', 'Preencha produto, cliente e comentário para salvar a avaliação.', true);
+      return;
+    }
+
+    const avaliacoes = obterAvaliacoes();
+    avaliacoes.push({
+      id: gerarId('AVA'),
+      produtoId,
+      produtoNome: produto.nome,
+      cliente,
+      nota,
+      comentario,
+      criadoEm: new Date().toLocaleString('pt-BR')
+    });
+
+    salvarAvaliacoes(avaliacoes);
+    atualizarMediaProduto(produtoId);
+    form.reset();
+    mostrarMensagem('msgAvaliacao', 'Avaliação registrada com sucesso.');
+    renderizarAvaliacoes();
+    setTimeout(() => mostrarMensagem('msgAvaliacao', ''), 3000);
+  });
+
+  renderizarAvaliacoes();
+}
+
+// Atividade 4 do cronograma: RF7 Mensagens
+function configurarMensagens() {
+  const form = $('mensagemForm');
+  if (!form) return;
+
+  const selectPedido = $('mensagemPedido');
+  const listaMensagens = $('listaMensagens');
+  const pedidos = obterPedidos();
+
+  selectPedido.innerHTML = '';
+  pedidos.forEach((pedido) => {
+    const option = document.createElement('option');
+    option.value = pedido.numero;
+    option.textContent = `${pedido.numero} - ${pedido.cliente}`;
+    selectPedido.appendChild(option);
+  });
+
+  if (!pedidos.length) {
+    selectPedido.innerHTML = '<option value="Geral">Mensagem geral</option>';
+  }
+
+  $('btnExportarMensagens')?.addEventListener('click', exportarMensagens);
+
+  function renderizarMensagens() {
+    const pedidoSelecionado = selectPedido.value || 'Geral';
+    const mensagens = obterMensagens().filter((mensagem) => mensagem.pedidoNumero === pedidoSelecionado).slice().reverse();
+    listaMensagens.innerHTML = '';
+
+    if (!mensagens.length) {
+      listaMensagens.innerHTML = '<div class="empty-state">Nenhuma mensagem registrada para este pedido.</div>';
+      return;
+    }
+
+    mensagens.forEach((mensagem) => {
+      const item = document.createElement('div');
+      item.className = `message-item ${mensagem.remetente === 'Vendedor' ? 'message-seller' : 'message-buyer'}`;
+      item.innerHTML = `
+        <strong>${mensagem.remetente}</strong>
+        <p>${mensagem.texto}</p>
+        <small>${mensagem.criadoEm}</small>
+      `;
+      listaMensagens.appendChild(item);
+    });
+  }
+
+  selectPedido.addEventListener('change', renderizarMensagens);
+
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    const texto = $('mensagemTexto').value.trim();
+    const pedidoNumero = selectPedido.value || 'Geral';
+    const remetente = $('mensagemRemetente').value;
+
+    if (!texto) {
+      mostrarMensagem('msgMensagem', 'Digite uma mensagem antes de enviar.', true);
+      return;
+    }
+
+    const mensagens = obterMensagens();
+    mensagens.push({
+      id: gerarId('MSG'),
+      pedidoNumero,
+      remetente,
+      texto,
+      criadoEm: new Date().toLocaleString('pt-BR')
+    });
+
+    salvarMensagens(mensagens);
+    $('mensagemTexto').value = '';
+    mostrarMensagem('msgMensagem', 'Mensagem enviada com sucesso.');
+    renderizarMensagens();
+    setTimeout(() => mostrarMensagem('msgMensagem', ''), 3000);
+  });
+
+  renderizarMensagens();
 }
 
 function configurarCadastroUsuario() {
@@ -677,7 +950,7 @@ function configurarVendedor() {
   });
 }
 
-// Inicialização geral das telas das entregas 1, 2 e 3 do cronograma
+// Inicialização geral das telas das entregas 1, 2, 3 e 4 do cronograma
 document.addEventListener('DOMContentLoaded', () => {
   const pagina = location.pathname.split('/').pop() || 'index.html';
 
@@ -690,4 +963,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (pagina === 'lista-produtos.html') configurarListaProdutos();
   if (pagina === 'carrinho.html') configurarCarrinho();
   if (pagina === 'pedido.html') configurarPedido();
+  if (pagina === 'historico.html') configurarHistoricoCompras();
+  if (pagina === 'avaliacoes.html') configurarAvaliacoes();
+  if (pagina === 'mensagens.html') configurarMensagens();
 });
