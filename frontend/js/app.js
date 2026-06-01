@@ -952,6 +952,11 @@ function configurarVendedor() {
 
 // Inicialização geral das telas das entregas 1, 2, 3 e 4 do cronograma
 document.addEventListener('DOMContentLoaded', () => {
+  if (typeof verificarAutenticacao === 'function') {
+    verificarAutenticacao();
+  }
+
+
   const pagina = location.pathname.split('/').pop() || 'index.html';
 
   atualizarIndicadorCarrinho();
