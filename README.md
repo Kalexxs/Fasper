@@ -1,4 +1,4 @@
-# FASPER Projeto de Sistemas Web II
+# FASPER Projeto Empreendedor II
 # Unidade 1, 2 
 
 Abra `frontend/index.html` no navegador.
