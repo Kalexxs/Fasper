@@ -1,4 +1,5 @@
-# FASPER Unidade 1, 2, 3, 4 e 5
+# FASPER Projeto de Sistemas Web II
+# Unidade 1, 2 
 
 Abra `frontend/index.html` no navegador.
 
@@ -52,8 +53,6 @@ Também foram adicionadas as funcionalidades:
 
 ## Atividade 5 do cronograma (Projeto Empreendedor 2 - Unidade 1)
 Foram adicionadas as funcionalidades:
-- RF10 Login/autenticação de usuários
-- RF11 Busca de produtos
 
 RF10 - Login/Autenticação:
 - Tela de login com validação de e-mail e senha
@@ -67,4 +66,10 @@ RF11 - Busca de produtos:
 - Filtro em tempo real pelo nome do produto
 - Botão para limpar os filtros
 
-As partes novas da Atividade 5 estão comentadas nos arquivos `frontend/js/auth.js` e nas modificações do `frontend/js/app.js`.
+## Atividade 6 do cronograma (Projeto Empreendedor 2 - Unidade 2)
+
+RF12 Edição/exclusão de produtos pelo vendedor
+- Edição de produtos já cadastrados (nome, preço, categoria, descrição e avaliação)
+- Exclusão de produtos da listagem
+- Atualização automática da lista após edição ou remoção
+- Sincronização com carrinho de compras (remoção de itens relacionados ao produto excluído)
