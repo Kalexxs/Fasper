@@ -316,6 +316,8 @@ async function configurarCadastroProduto() {
     const descricao = $('produtoDescricao').value.trim();
     const files = Array.from(arquivosSelecionados || []);
 
+    const usuario = getUsuarioLogado() || {};
+
     if (!nome || !categoria || !preco || preco <= 0) {
       mostrarMensagem('msgProduto', 'Campo é obrigatório. Preencha nome, preço e categoria corretamente.', true);
       return;
@@ -340,7 +342,8 @@ async function configurarCadastroProduto() {
         avaliacao,
         quantidadeFotos: fotos.length,
         fotos,
-        criadoEm: new Date().toLocaleString('pt-BR')
+        criadoEm: new Date().toLocaleString('pt-BR'),
+        vendedor: usuario ? usuario.email : ''
       });
 
       salvarProdutos(produtos);
@@ -367,6 +370,46 @@ function configurarListaProdutos() {
   const modal = $('modalImagens');
   const modalTitulo = $('modalTituloProduto');
   const btnExportar = $('btnExportarProdutosLista');
+  let produtoEditando = null;
+ 
+
+const modalEditar = $('modalEditar');
+const btnSalvarEdicao = $('btnSalvarEdicao');
+const btnCancelarEdicao = $('btnCancelarEdicao');
+
+//nova function
+btnSalvarEdicao?.addEventListener('click', () => {
+  if (!produtoEditando) return;
+
+  const produtos = obterProdutos();
+  const index = produtos.findIndex(p => p.id === produtoEditando.id);
+
+  if (index === -1) return;
+
+  produtos[index] = {
+    ...produtos[index],
+    nome: $('editarNome').value,
+    preco: Number($('editarPreco').value),
+    categoria: $('editarCategoria').value,
+    descricao: $('editarDescricao').value,
+    avaliacao: Number($('editarAvaliacao').value)
+  };
+
+  salvarProdutos(produtos);
+
+  modalEditar.hidden = true;
+  produtoEditando = null;
+
+  mostrarMensagem('msgListaProdutos', 'Produto atualizado com sucesso.');
+
+  renderizar();
+});
+btnCancelarEdicao?.addEventListener('click', () => {
+  modalEditar.hidden = true;
+  produtoEditando = null;
+});
+
+
   if (modal) modal.hidden = true;
   const modalImagemPrincipal = $('modalImagemPrincipal');
   const modalMiniaturas = $('modalMiniaturas');
@@ -408,6 +451,8 @@ function configurarListaProdutos() {
       : '<div class="modal-image-empty">Sem imagem cadastrada.</div>';
 
     modalMiniaturas.innerHTML = '';
+    
+    
 
     fotos.forEach((foto, indice) => {
       const botao = document.createElement('button');
@@ -422,6 +467,17 @@ function configurarListaProdutos() {
       modalMiniaturas.appendChild(botao);
     });
   }
+  function abrirModalEditar(produto) {
+  produtoEditando = produto;
+console.log("🔥 MODAL EDITAR ABIERTO", produto);
+  $('editarNome').value = produto.nome;
+  $('editarPreco').value = produto.preco;
+  $('editarCategoria').value = produto.categoria;
+  $('editarDescricao').value = produto.descricao;
+  $('editarAvaliacao').value = produto.avaliacao;
+
+  modalEditar.hidden = false;
+}
 
   function fecharModalImagens() {
     if (!modal) return;
@@ -448,21 +504,62 @@ function configurarListaProdutos() {
             ${fotoPrincipal ? `<img src="${fotoPrincipal}" alt="Miniatura do produto ${produto.nome}" class="table-photo-thumb">` : '<span class="table-photo-empty">Sem foto</span>'}
           </button>
         </td>
-        <td>
-          <div class="table-actions-wrap">
-            <button class="btn btn-secondary btn-small" type="button">Ver imagem</button>
-            <button class="btn btn-primary btn-small btn-add-cart" type="button">Adicionar</button>
-          </div>
-        </td>
+       <td>
+  <div class="table-actions-wrap">
+    <button class="btn btn-secondary btn-small btn-ver" type="button">
+      Ver imagem
+    </button>
+
+    <button class="btn btn-primary btn-small btn-add-cart" type="button">
+      Adicionar
+    </button>
+
+    <button class="btn btn-secondary btn-small btn-editar" type="button">
+      Editar
+    </button>
+
+    <button class="btn btn-secondary btn-small btn-excluir" type="button">
+      Excluir
+    </button>
+  </div>
+</td>
       `;
 
       tr.querySelector('.photo-thumb-button').addEventListener('click', () => abrirModalImagens(produto));
-      tr.querySelector('.btn-secondary').addEventListener('click', () => abrirModalImagens(produto));
+      tr.querySelector('.btn-ver').addEventListener('click', () => abrirModalImagens(produto));
       tr.querySelector('.btn-add-cart').addEventListener('click', () => {
         adicionarAoCarrinho(produto);
         mostrarMensagem('msgListaProdutos', `Produto ${produto.nome} adicionado ao carrinho.`);
         setTimeout(() => mostrarMensagem('msgListaProdutos', ''), 2500);
-      });
+      }); 
+      //editar 
+      tr.querySelector('.btn-editar').addEventListener('click', () => {
+  abrirModalEditar(produto);
+});
+  
+
+
+      //botao exluir
+tr.querySelector('.btn-excluir').addEventListener('click', () => {
+  const confirmar = confirm(`Deseja excluir o produto ${produto.nome}?`);
+  if (!confirmar) return;
+
+  
+  const produtos = obterProdutos().filter(p => p.id !== produto.id);
+  salvarProdutos(produtos);
+
+  
+  const carrinho = obterCarrinho().filter(item => item.id !== produto.id);
+  salvarCarrinho(carrinho);
+  atualizarIndicadorCarrinho();
+
+  renderizar();
+
+  mostrarMensagem('msgListaProdutos', `Produto ${produto.nome} removido com sucesso.`);
+  setTimeout(() => mostrarMensagem('msgListaProdutos', ''), 2500);
+});
+      
+
       tabelaBody.appendChild(tr);
     });
 

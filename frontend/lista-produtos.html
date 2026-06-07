@@ -122,6 +122,50 @@
       <div id="modalMiniaturas" class="modal-thumbs"></div>
     </div>
   </div>
+    <!-- contenido de la página -->
+  <div id="lista-produtos"></div>
+
+  <!-- MODAL (esto que me mandaste) -->
+  <div id="modalEditar" class="modal" hidden>
+    <div class="modal-content">
+
+      <h2>Editar Produto</h2>
+
+      <label>Nome</label>
+      <input type="text" id="editarNome">
+
+      <label>Preço</label>
+      <input type="number" id="editarPreco">
+
+      <label>Categoria</label>
+      <input type="text" id="editarCategoria">
+
+      <label>Descrição</label>
+      <textarea id="editarDescricao"></textarea>
+
+      <label>Avaliação</label>
+      <input
+        type="number"
+        id="editarAvaliacao"
+        min="0"
+        max="5"
+        step="0.1"
+      >
+
+      <div class="modal-actions">
+        <button id="btnSalvarEdicao" class="btn btn-primary">
+          Salvar
+        </button>
+
+        <button id="btnCancelarEdicao" class="btn btn-secondary">
+          Cancelar
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+ 
 
     <script src="js/auth.js"></script>
   <script src="js/app.js"></script>
