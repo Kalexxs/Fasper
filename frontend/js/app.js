@@ -50,6 +50,77 @@ function mostrarMensagem(idElemento, texto, erro = false) {
   elemento.classList.toggle('msg-error', erro);
 }
 
+// RF14 – helpers de validação de campos
+function marcarInvalido(id, mensagem) {
+  const el = $(id);
+  if (!el) return;
+  el.classList.add('invalido');
+  el.classList.remove('valido');
+  let span = el.parentElement.querySelector('.erro-campo');
+  if (!span) {
+    span = document.createElement('span');
+    span.className = 'erro-campo';
+    el.parentElement.appendChild(span);
+  }
+  span.textContent = mensagem;
+}
+
+function marcarValido(id) {
+  const el = $(id);
+  if (!el) return;
+  el.classList.remove('invalido');
+  el.classList.add('valido');
+  const span = el.parentElement.querySelector('.erro-campo');
+  if (span) span.textContent = '';
+}
+
+function limparEstadoCampo(id) {
+  const el = $(id);
+  if (!el) return;
+  el.classList.remove('invalido', 'valido');
+  const span = el.parentElement.querySelector('.erro-campo');
+  if (span) span.remove();
+}
+
+// RF13 – drawer mobile deslizante da esquerda para a direita
+function configurarNavegacao() {
+  const toggle = document.getElementById('btnNavToggle');
+  const nav = document.getElementById('navPrincipal');
+  if (!toggle || !nav) return;
+
+  const overlay = document.createElement('div');
+  overlay.className = 'nav-overlay';
+  document.body.appendChild(overlay);
+
+  function fecharNav() {
+    nav.classList.remove('nav-open');
+    overlay.classList.remove('active');
+    toggle.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+  }
+
+  function abrirNav() {
+    nav.classList.add('nav-open');
+    overlay.classList.add('active');
+    toggle.setAttribute('aria-expanded', 'true');
+    document.body.style.overflow = 'hidden';
+  }
+
+  toggle.addEventListener('click', () => {
+    nav.classList.contains('nav-open') ? fecharNav() : abrirNav();
+  });
+
+  overlay.addEventListener('click', fecharNav);
+
+  nav.querySelectorAll('a').forEach((link) => {
+    link.addEventListener('click', fecharNav);
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') fecharNav();
+  });
+}
+
 // Atividade 3 do cronograma: atualiza o contador visual de itens no carrinho
 function atualizarIndicadorCarrinho() {
   const carrinho = obterCarrinho();
@@ -318,10 +389,11 @@ async function configurarCadastroProduto() {
 
     const usuario = getUsuarioLogado() || {};
 
-    if (!nome || !categoria || !preco || preco <= 0) {
-      mostrarMensagem('msgProduto', 'Campo é obrigatório. Preencha nome, preço e categoria corretamente.', true);
-      return;
-    }
+    let camposValidos = true;
+     if (!nome || nome.length < 2) { marcarInvalido('produtoNome', 'Nome do produto é obrigatório (mínimo 2 caracteres).'); camposValidos = false; } else marcarValido('produtoNome');
+     if (!preco || preco <= 0) { marcarInvalido('produtoPreco', 'Informe um preço maior que zero.'); camposValidos = false; } else marcarValido('produtoPreco');
+     if (!categoria) { marcarInvalido('produtoCategoria', 'Informe a categoria do produto.'); camposValidos = false; } else marcarValido('produtoCategoria');
+     if (!camposValidos) { mostrarMensagem('msgProduto', 'Corrija os campos destacados em vermelho.', true); return; }
 
     const erroFotos = validarFotos(files);
     if (erroFotos) {
@@ -710,10 +782,11 @@ function configurarPedido() {
     const formaPagamento = $('pedidoPagamento').value;
     const observacao = $('pedidoObservacao').value.trim();
 
-    if (!cliente || !contato || !endereco) {
-      mostrarMensagem('msgPedido', 'Preencha nome, contato e endereço para finalizar o pedido.', true);
-      return;
-    }
+    let pedidoValido = true;
+     if (!cliente) { marcarInvalido('pedidoCliente', 'Nome do cliente é obrigatório.'); pedidoValido = false; } else marcarValido('pedidoCliente');
+     if (!contato) { marcarInvalido('pedidoContato', 'Contato é obrigatório.'); pedidoValido = false; } else marcarValido('pedidoContato');
+     if (!endereco) { marcarInvalido('pedidoEndereco', 'Endereço de entrega é obrigatório.'); pedidoValido = false; } else marcarValido('pedidoEndereco');
+     if (!pedidoValido) { mostrarMensagem('msgPedido', 'Corrija os campos destacados em vermelho.', true); return; }
 
     const pedidos = obterPedidos();
     const numero = `PED-${new Date().getFullYear()}-${String(pedidos.length + 1).padStart(3, '0')}`;
@@ -901,10 +974,11 @@ function configurarAvaliacoes() {
     const nota = Number($('avaliacaoNota').value);
     const comentario = $('avaliacaoComentario').value.trim();
 
-    if (!produto || !cliente || !comentario) {
-      mostrarMensagem('msgAvaliacao', 'Preencha produto, cliente e comentário para salvar a avaliação.', true);
-      return;
-    }
+    let avaliacaoValida = true;
+     if (!produto) { marcarInvalido('avaliacaoProduto', 'Selecione um produto.'); avaliacaoValida = false; } else marcarValido('avaliacaoProduto');
+     if (!cliente) { marcarInvalido('avaliacaoCliente', 'Informe seu nome.'); avaliacaoValida = false; } else marcarValido('avaliacaoCliente');
+     if (!comentario) { marcarInvalido('avaliacaoComentario', 'Escreva um comentário para a avaliação.'); avaliacaoValida = false; } else marcarValido('avaliacaoComentario');
+     if (!avaliacaoValida) { mostrarMensagem('msgAvaliacao', 'Corrija os campos destacados em vermelho.', true); return; }
 
     const avaliacoes = obterAvaliacoes();
     avaliacoes.push({
@@ -983,9 +1057,11 @@ function configurarMensagens() {
     const remetente = $('mensagemRemetente').value;
 
     if (!texto) {
+      marcarInvalido('mensagemTexto', 'Digite uma mensagem antes de enviar.');
       mostrarMensagem('msgMensagem', 'Digite uma mensagem antes de enviar.', true);
       return;
     }
+    marcarValido('mensagemTexto');
 
     const mensagens = obterMensagens();
     mensagens.push({
@@ -1010,18 +1086,43 @@ function configurarCadastroUsuario() {
   const form = $('cadastroForm');
   if (!form) return;
 
+  $('nome')?.addEventListener('blur', () => {
+    const v = $('nome').value.trim();
+    if (!v || v.length < 3) marcarInvalido('nome', 'Nome deve ter pelo menos 3 caracteres.');
+    else marcarValido('nome');
+  });
+  $('email')?.addEventListener('blur', () => {
+    const v = $('email').value.trim();
+    if (!v || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) marcarInvalido('email', 'Digite um e-mail válido.');
+    else marcarValido('email');
+  });
+  $('senha')?.addEventListener('blur', () => {
+    const v = $('senha').value;
+    if (!v || v.length < 6) marcarInvalido('senha', 'Senha deve ter pelo menos 6 caracteres.');
+    else marcarValido('senha');
+  });
+
   form.addEventListener('submit', (event) => {
     event.preventDefault();
+    const nome = $('nome').value.trim();
+    const email = $('email').value.trim();
+    const senha = $('senha').value;
+    let valido = true;
+
+    if (!nome || nome.length < 3) { marcarInvalido('nome', 'Nome deve ter pelo menos 3 caracteres.'); valido = false; } else marcarValido('nome');
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { marcarInvalido('email', 'Digite um e-mail válido.'); valido = false; } else marcarValido('email');
+    if (!senha || senha.length < 6) { marcarInvalido('senha', 'Senha deve ter pelo menos 6 caracteres.'); valido = false; } else marcarValido('senha');
+    if (!valido) return;
 
     const dados = {
-      nome: $('nome').value,
-      email: $('email').value,
-      senha: $('senha').value,
+      nome,
+      email,
+      senha,
       tipo: $('tipo').value,
       observacao: $('observacao').value
     };
-
     gravar('usuario', dados);
+    sessionStorage.setItem('usuarioLogado', JSON.stringify(dados));
     exportarUsuarios();
     location.href = 'vendedor.html';
   });
@@ -1031,16 +1132,30 @@ function configurarVendedor() {
   const form = $('vendedorForm');
   if (!form) return;
 
+  $('loja')?.addEventListener('blur', () => {
+    const v = $('loja').value.trim();
+    if (!v) marcarInvalido('loja', 'Nome da loja é obrigatório.'); else marcarValido('loja');
+  });
+  $('contato')?.addEventListener('blur', () => {
+    const v = $('contato').value.trim();
+    if (!v) marcarInvalido('contato', 'Contato é obrigatório.'); else marcarValido('contato');
+  });
+
   form.addEventListener('submit', (event) => {
     event.preventDefault();
+    const loja = $('loja').value.trim();
+    const contato = $('contato').value.trim();
+    let valido = true;
+    if (!loja) { marcarInvalido('loja', 'Nome da loja é obrigatório.'); valido = false; } else marcarValido('loja');
+    if (!contato) { marcarInvalido('contato', 'Contato é obrigatório.'); valido = false; } else marcarValido('contato');
+    if (!valido) return;
 
     const dados = {
-      loja: $('loja').value,
-      contato: $('contato').value,
+      loja,
+      contato,
       imagem: $('imagem').value,
       descricao: $('descricao').value
     };
-
     gravar('vendedor', dados);
     exportarVendedor();
     location.href = 'resumo.html';
@@ -1056,6 +1171,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const pagina = location.pathname.split('/').pop() || 'index.html';
 
+  configurarNavegacao();
   atualizarIndicadorCarrinho();
 
   if (pagina === 'cadastro.html') configurarCadastroUsuario();

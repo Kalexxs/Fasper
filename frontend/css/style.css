@@ -367,7 +367,7 @@ textarea {
   color: #46607e;
 }
 
-@media (max-width: 760px) {
+@media (max-width: 1024px) {
   .header-inner {
     flex-direction: column;
     align-items: flex-start;
@@ -1154,4 +1154,585 @@ textarea {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
+}
+
+/* ============================================================
+   RF13 – Responsividade / Usabilidade
+   ============================================================ */
+
+/* Hamburger button (visível só em mobile) */
+.nav-toggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  flex-direction: column;
+  gap: 5px;
+  border-radius: 8px;
+  align-self: center;
+}
+.nav-toggle span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: #1b2b42;
+  border-radius: 2px;
+  transition: transform 0.2s, opacity 0.2s;
+}
+.nav-toggle[aria-expanded="true"] span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+.nav-toggle[aria-expanded="true"] span:nth-child(2) {
+  opacity: 0;
+}
+.nav-toggle[aria-expanded="true"] span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* Drawer deslizante da esquerda para a direita */
+.nav-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.5);
+  z-index: 199;
+}
+.nav-overlay.active {
+  display: block;
+}
+
+/* Previne overflow horizontal global */
+html, body { overflow-x: hidden; max-width: 100%; }
+
+/* Grid items nunca expandem além do container (fix min-width: auto padrão) */
+.page-store-final > *,
+.cart-page-grid > *,
+.order-grid > *,
+.activity4-grid > * {
+  min-width: 0;
+}
+
+/* Garante que a tabela nunca vaza do wrapper */
+.table-wrap,
+.table-wrap-final {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  max-width: 100%;
+}
+
+/* section-heading com ações: wrap no mobile */
+.section-heading {
+  flex-wrap: wrap;
+}
+
+/* Marca da empresa: não quebra nem estoura */
+.brand {
+  min-width: 0;
+  flex-shrink: 1;
+}
+.brand h1 {
+  white-space: nowrap;
+}
+
+@media (max-width: 1024px) {
+  .nav-toggle {
+    display: flex;
+  }
+
+  /* Header: logo à esquerda, hamburger à direita */
+  .header-inner {
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    flex-wrap: nowrap !important;
+    padding: 24px !important;
+    min-height: 60px;
+  }
+
+  .brand h1 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 160px;
+  }
+
+  /* Nav como drawer fixo, fora da tela por padrão */
+  #navPrincipal {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 270px;
+    max-width: 85vw;
+    background: #ffffff;
+    border-right: 1px solid #e3e9f2;
+    box-shadow: 4px 0 28px rgba(20, 35, 60, 0.14);
+    flex-direction: column !important;
+    display: flex !important;
+    gap: 4px;
+    padding: 14px 14px 40px;
+    z-index: 200;
+    overflow-y: auto;
+    transform: translateX(-100%);
+    transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  #navPrincipal.nav-open {
+    transform: translateX(0);
+  }
+
+  .nav a {
+    padding: 13px 16px;
+    border-radius: 12px;
+    font-size: 1rem;
+    width: 100%;
+    display: block;
+  }
+
+  /* RF13 – seções com heading + ações lado a lado → coluna */
+  .section-heading,
+  .section-heading-final {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 12px;
+  }
+  .section-actions-inline {
+    flex-wrap: wrap;
+    width: 100%;
+  }
+  .section-actions-inline .btn {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  /* RF13 – hero da home */
+  .store-hero {
+    flex-direction: column;
+  }
+  .store-hero-side {
+    min-width: 0;
+    width: 100%;
+  }
+
+  /* RF13 – toolbar da loja em mobile */
+  .store-toolbar-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* RF13 – tabelas: contêiner com scroll, sem vazar */
+  .table-wrap,
+  .table-wrap-final {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* RF13 – grid do carrinho e pedido em coluna */
+  .cart-page-grid,
+  .order-grid,
+  .activity4-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* RF13 – painel lateral do carrinho sem largura mínima */
+  .cart-summary-panel,
+  .order-summary-panel,
+  .activity4-side-panel {
+    min-width: 0;
+    width: 100%;
+  }
+
+  /* RF13 – box com padding menor em mobile */
+  .hero, .panel {
+    padding: 18px;
+  }
+  .store-body,
+  .store-toolbar,
+  .store-showcase-section,
+  .table-section,
+  .table-section-final,
+  .cart-summary-panel,
+  .order-summary-panel {
+    padding: 16px;
+  }
+
+  /* RF13 – filtros em mobile */
+  .filters-row-final {
+    grid-template-columns: 1fr !important;
+  }
+  .filters-actions-final {
+    flex-direction: row;
+    width: 100%;
+  }
+  .filters-actions-final .btn {
+    flex: 1;
+  }
+
+  /* RF13 – modal em mobile */
+  .modal-gallery {
+    padding: 12px;
+    align-items: flex-end;
+  }
+  .modal-gallery-card {
+    max-height: 82vh;
+    overflow-y: auto;
+  }
+  .modal-image-main {
+    min-height: 200px;
+  }
+  .modal-content {
+    max-height: 85vh;
+    overflow-y: auto;
+  }
+
+  /* RF13 – touch targets mínimos 44px */
+  .btn {
+    min-height: 44px;
+  }
+  input, select {
+    min-height: 44px;
+  }
+
+  /* RF13 – cards da home */
+  .home-grid-cards {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  /* RF13 – totais do carrinho em coluna */
+  .cart-totals-inline {
+    flex-direction: column;
+  }
+  .cart-total-card {
+    min-width: 0;
+    width: 100%;
+  }
+
+  /* RF13 – paginação */
+  .pagination-bar {
+    gap: 8px;
+  }
+
+  /* RF13 – padding geral mobile */
+  .page {
+    padding: 20px 0 32px;
+  }
+  .container {
+    padding: 24px 8px;
+  }
+  .box {
+    border-radius: 14px;
+  }
+  .hero h2, .store-hero-copy h2 {
+    font-size: 1.6rem;
+  }
+  .panel h2 {
+    font-size: 1.25rem;
+  }
+  .store-price {
+    font-size: 1.5rem;
+  }
+  .form-grid {
+    gap: 12px;
+  }
+  .actions {
+    gap: 8px;
+    margin-top: 16px;
+  }
+  .activity4-item,
+  .message-item {
+    padding: 12px;
+  }
+  .home-card-mini {
+    padding: 12px;
+  }
+  .tag-entrega {
+    font-size: 0.82rem;
+    padding: 7px 10px;
+  }
+}
+
+/* ── Top user bar: desktop (fixo no body, topo direito) ── */
+.top-user-bar {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.usuario-desktop-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 12px;
+  background: #f0f4ff;
+  border: 1px solid #d4e4ff;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #2f6df6;
+  white-space: nowrap;
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: default;
+}
+
+.btn-sair-desktop {
+  height: 36px;
+  padding: 0 16px;
+  background: #e74c3c;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  font-weight: 800;
+  cursor: pointer;
+  letter-spacing: 0.3px;
+}
+.btn-sair-desktop:hover {
+  background: #c0392b;
+}
+
+/* ── Usuário logado: mobile (dentro do drawer) ── */
+.nav-usuario-block {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 13px 14px;
+  margin-bottom: 10px;
+  border-radius: 14px;
+  background: #edf3ff;
+  border: 1px solid #d4e4ff;
+}
+.nav-usuario-nome {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #1b2b42;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.nav-sair-btn {
+  background: #e74c3c;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 7px 12px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  flex-shrink: 0;
+  min-height: 36px;
+}
+
+/* Esconde cada versão no viewport errado */
+@media (min-width: 1025px) {
+  .nav-usuario-block { display: none !important; }
+}
+@media (max-width: 1024px) {
+  /* Top bar só existe no desktop */
+  .top-user-bar { display: none !important; }
+}
+
+/* Chip legado nunca aparece */
+.usuario-chip { display: none !important; }
+
+/* btnSair do HTML sempre oculto — SAIR real está na top-user-bar (desktop) ou no drawer (mobile) */
+#btnSair { display: none !important; }
+
+/* Botões Entrar / Cadastrar (usuário não logado, desktop) */
+.btn-entrar-desktop {
+  height: 36px;
+  padding: 0 18px;
+  background: #2f6df6;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  letter-spacing: 0.2px;
+}
+.btn-entrar-desktop:hover { background: #1a56d6; color: #fff; }
+
+.btn-cadastro-desktop {
+  height: 36px;
+  padding: 0 18px;
+  background: #fff;
+  color: #2f6df6;
+  border: 1.5px solid #2f6df6;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  letter-spacing: 0.2px;
+}
+.btn-cadastro-desktop:hover { background: #eef3ff; color: #2f6df6; }
+
+/* Botões Entrar / Cadastrar dentro do drawer mobile */
+.nav-entrar-btn,
+.nav-cadastro-btn {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 9px 12px;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+.nav-entrar-btn {
+  background: #2f6df6 !important;
+  color: #fff !important;
+  border: none !important;
+  width: auto !important;
+}
+.nav-entrar-btn:hover { background: #1a56d6 !important; color: #fff !important; }
+.nav-cadastro-btn {
+  background: #fff !important;
+  color: #2f6df6 !important;
+  border: 1.5px solid #2f6df6 !important;
+  width: auto !important;
+}
+.nav-cadastro-btn:hover { background: #eef3ff !important; color: #2f6df6 !important; }
+
+@media (max-width: 900px) {
+  .store-toolbar-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* ============================================================
+   RF14 – Validações: estados visuais de campos
+   ============================================================ */
+input.invalido,
+select.invalido,
+textarea.invalido {
+  border-color: #c62828 !important;
+  background: #fff8f8;
+  outline: none;
+}
+input.valido,
+select.valido,
+textarea.valido {
+  border-color: #198754 !important;
+  background: #f6fff9;
+}
+.erro-campo {
+  color: #c62828;
+  font-size: 0.82rem;
+  font-weight: 600;
+  margin-top: 3px;
+  display: block;
+}
+label.obrigatorio::after {
+  content: ' *';
+  color: #c62828;
+  font-weight: 700;
+}
+
+/* fim RF13/RF14 */
+
+/* ============================================================
+   DESKTOP HEADER – UI/UX aprimorado (≥ 1025px)
+   Layout de duas linhas: linha do brand + linha da nav
+   ============================================================ */
+@media (min-width: 1025px) {
+  /* Sticky com sombra sutil */
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: #ffffff;
+    box-shadow: 0 2px 16px rgba(20, 35, 60, 0.07);
+    border-bottom: 1.5px solid #e8edf5;
+  }
+
+  /* Duas linhas: brand em cima, nav embaixo */
+  .header-inner {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+    gap: 0 !important;
+    padding: 0 24px !important;
+    min-height: auto !important;
+  }
+
+  /* Linha 1: brand */
+  .brand {
+    height: 56px;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .brand h1 {
+    font-size: 1.15rem;
+    overflow: visible;
+    text-overflow: clip;
+    max-width: none;
+  }
+
+  /* Linha 2: nav horizontal, uma única linha com scroll invisível */
+  .nav {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: visible;
+    scrollbar-width: none;
+    gap: 0 !important;
+    padding: 0 !important;
+    border-top: 1.5px solid #f0f4fa;
+    background: transparent;
+  }
+  .nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Links da nav: underline-style */
+  .nav a {
+    display: inline-flex !important;
+    align-items: center;
+    white-space: nowrap;
+    flex-shrink: 0;
+    height: 44px;
+    padding: 0 14px !important;
+    font-size: 0.84rem !important;
+    font-weight: 600;
+    color: #4b5a7a;
+    border-radius: 0 !important;
+    border-bottom: 2.5px solid transparent;
+    transition: color 0.14s, border-color 0.14s, background 0.14s;
+    text-decoration: none !important;
+    width: auto !important;
+  }
+  .nav a:hover {
+    color: #2f6df6;
+    background: #f4f7ff;
+    border-bottom-color: #2f6df6;
+  }
+  .nav a.active {
+    color: #2f6df6;
+    background: #eef3ff;
+    border-bottom-color: #2f6df6;
+    font-weight: 700;
+  }
+
+  /* Badge do carrinho fica bem proporcional */
+  .cart-badge {
+    font-size: 0.7rem;
+    padding: 1px 5px;
+  }
 }

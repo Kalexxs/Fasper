@@ -13,12 +13,17 @@
   <!-- Atividade 4 do cronograma -->
   <header class="header">
     <div class="container header-inner">
-      <div class="brand">
+      <a class="brand" href="index.html">
         <div class="logo">F</div>
         <h1>FASPER Marketplace</h1>
-      </div>
+      </a>
 
-      <nav class="nav">
+      <button class="nav-toggle" id="btnNavToggle" aria-label="Abrir menu de navegação" aria-expanded="false" aria-controls="navPrincipal">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <nav class="nav" id="navPrincipal">
         <a href="index.html">Início</a>
         <a href="cadastro.html">Cadastro</a>
         <a href="vendedor.html">Vendedor</a>
@@ -44,7 +49,7 @@
   <main class="container page activity4-grid">
     <section class="box panel">
       <span class="tag-entrega">Atividade 4 do cronograma</span><h2>Mensagens</h2><p>RF7: comunicação simples entre comprador e vendedor sobre pedidos e produtos.</p>
-      <form id="mensagemForm" class="form-grid">
+      <form id="mensagemForm" class="form-grid" novalidate>
         <div class="field"><label for="mensagemPedido">Pedido relacionado</label><select id="mensagemPedido"></select></div>
         <div class="field"><label for="mensagemRemetente">Remetente</label><select id="mensagemRemetente"><option>Comprador</option><option>Vendedor</option></select></div>
         <div class="field full"><label for="mensagemTexto">Mensagem</label><textarea id="mensagemTexto" placeholder="Digite a mensagem" required></textarea></div>
@@ -55,7 +60,5 @@
   </main>
     <script src="js/auth.js"></script>
   <script src="js/app.js"></script>
-</body>
-</html>
 </body>
 </html>

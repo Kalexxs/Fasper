@@ -13,12 +13,17 @@
   <!-- Atividade 2 do cronograma: RF3 Cadastro de produtos -->
   <header class="header">
     <div class="container header-inner">
-      <div class="brand">
+      <a class="brand" href="index.html">
         <div class="logo">F</div>
         <h1>FASPER Marketplace</h1>
-      </div>
+      </a>
 
-      <nav class="nav">
+      <button class="nav-toggle" id="btnNavToggle" aria-label="Abrir menu de navegação" aria-expanded="false" aria-controls="navPrincipal">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <nav class="nav" id="navPrincipal">
         <a href="index.html">Início</a>
         <a href="cadastro.html">Cadastro</a>
         <a href="vendedor.html">Vendedor</a>
@@ -49,19 +54,19 @@
         RF3: cadastro de produtos com nome, preço, categoria, avaliação inicial e no mínimo 2 fotos.
       </p>
 
-      <form id="produtoForm" class="form-grid" enctype="multipart/form-data">
+      <form id="produtoForm" class="form-grid" enctype="multipart/form-data" novalidate>
         <div class="field">
-          <label for="produtoNome">Nome do produto</label>
+          <label for="produtoNome" class="obrigatorio">Nome do produto</label>
           <input id="produtoNome" required>
         </div>
 
         <div class="field">
-          <label for="produtoPreco">Preço do produto (R$)</label>
+          <label for="produtoPreco" class="obrigatorio">Preço do produto (R$)</label>
           <input id="produtoPreco" type="number" min="0.01" step="0.01" required>
         </div>
 
         <div class="field">
-          <label for="produtoCategoria">Categoria</label>
+          <label for="produtoCategoria" class="obrigatorio">Categoria</label>
           <input id="produtoCategoria" placeholder="Ex.: Artesanato" required>
         </div>
 
@@ -82,7 +87,7 @@
         </div>
 
         <div class="field full">
-          <label for="produtoFotos">Fotos do produto (mínimo 2)</label>
+          <label for="produtoFotos" class="obrigatorio">Fotos do produto (mínimo 2)</label>
           <input id="produtoFotos" type="file" accept="image/*" multiple>
           <small class="helper-text">Você pode selecionar uma foto por vez. O sistema acumula os anexos até atingir no mínimo 2 fotos.</small>
         </div>
@@ -104,7 +109,5 @@
 
     <script src="js/auth.js"></script>
   <script src="js/app.js"></script>
-</body>
-</html>
 </body>
 </html>

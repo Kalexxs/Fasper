@@ -9,12 +9,17 @@
 <body>
   <header class="header">
     <div class="container header-inner">
-      <div class="brand">
+      <a class="brand" href="index.html">
         <div class="logo">F</div>
         <h1>FASPER Marketplace</h1>
-      </div>
+      </a>
 
-      <nav class="nav">
+      <button class="nav-toggle" id="btnNavToggle" aria-label="Abrir menu de navegação" aria-expanded="false" aria-controls="navPrincipal">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <nav class="nav" id="navPrincipal">
         <a href="index.html">Início</a>
         <a class="active" href="cadastro.html">Cadastro</a>
         <a href="vendedor.html">Vendedor</a>
@@ -45,19 +50,19 @@
       <h2>Cadastro de usuário</h2>
       <p>Preencha os dados abaixo.</p>
 
-      <form id="cadastroForm" class="form-grid">
+      <form id="cadastroForm" class="form-grid" novalidate>
         <div class="field">
-          <label for="nome">Nome completo</label>
+          <label for="nome" class="obrigatorio">Nome completo</label>
           <input id="nome" required>
         </div>
 
         <div class="field">
-          <label for="email">E-mail</label>
+          <label for="email" class="obrigatorio">E-mail</label>
           <input id="email" type="email" required>
         </div>
 
         <div class="field">
-          <label for="senha">Senha</label>
+          <label for="senha" class="obrigatorio">Senha</label>
           <input id="senha" type="password" required>
         </div>
 

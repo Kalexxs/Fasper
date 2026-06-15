@@ -73,3 +73,22 @@ RF12 Edição/exclusão de produtos pelo vendedor
 - Exclusão de produtos da listagem
 - Atualização automática da lista após edição ou remoção
 - Sincronização com carrinho de compras (remoção de itens relacionados ao produto excluído)
+
+## Atividade 7 do cronograma (Projeto Empreendedor 2 - Unidade 3)
+
+RF13 - Responsividade e usabilidade:
+- Layout responsivo com breakpoint em 1024px (inclui tablets)
+- Menu de navegação em drawer deslizante da esquerda para a direita no mobile
+- Overlay com bloqueio de scroll ao abrir o menu
+- Fechamento do drawer por clique no overlay, em link de navegação ou tecla Escape
+- Touch targets mínimos de 44px em botões e campos
+- Grids adaptados para coluna única no mobile (carrinho, pedido, atividade 4)
+- Tabelas com scroll horizontal para não vazar do layout
+- Filtros e seções com ações reorganizados em coluna no mobile
+
+RF14 - Validações e testes finais:
+- Validação em tempo real por campo (blur) com marcação visual de erro/sucesso
+- Mensagens de erro por campo abaixo do input inválido
+- Labels de campos obrigatórios marcados com asterisco (*)
+- Validação aplicada em todos os formulários: cadastro, vendedor, produtos, pedido, avaliações e mensagens
+- Formulários com atributo `novalidate` (validação totalmente controlada por JS)
